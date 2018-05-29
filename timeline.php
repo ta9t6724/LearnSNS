@@ -94,9 +94,13 @@
         }else{
         $record["like_flag"] = 0;
         }
-        
-        $feeds[] = $record;
-        // $arr[] = 'ほげ';
+        // いいね済みのみのリンクが押されたときは、配列にすでにいいね！してるものだけを代入する
+        if (isset($_GET["feed_select"]) && ($_GET["feed_select"] == "likes") && ($record["like_flag"] == 1)) {
+        	$feeds[] = $record;
+        }
+        if (isset($_GET["feed_select"]) && ($_GET["feed_select"] == "news")) {
+        	$feeds[] = $record;
+        }
     }
 
 
@@ -150,8 +154,15 @@
     <div class="row">
       <div class="col-xs-3">
         <ul class="nav nav-pills nav-stacked">
+        <?php if (isset($_GET["feed_select"]) && ($_GET["feed_select"] == "likes")) {
+         ?>
+          <li><a href="timeline.php?feed_select=news">新着順</a></li>
+          <li class="active"><a href="timeline.php?feed_select=likes">いいね！済み</a></li>
+        <?php }else{ ?>
           <li class="active"><a href="timeline.php?feed_select=news">新着順</a></li>
           <li><a href="timeline.php?feed_select=likes">いいね！済み</a></li>
+        <?php } ?>
+
           <!-- <li><a href="timeline.php?feed_select=follows">フォロー</a></li> -->
         </ul>
       </div>
