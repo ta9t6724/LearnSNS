@@ -46,6 +46,29 @@
     	$page = 1;
     }
 
+    // max: カンマ区切りで羅列された数字の中から最大の数を返す
+    // 第一引数に入っている値を見て、第二引数と比較。もし第二引数の方が大きければ第二引数の値を返す
+    $page = max($page, 1);
+
+    $count_sql = 'SELECT COUNT(feed) AS `cnt` FROM `feeds`';
+    $count_data = array();
+    $count_stmt = $dbh->prepare($count_sql);
+    $count_stmt->execute($count_data);
+    $feed_cnt = $count_stmt->fetch(PDO::FETCH_ASSOC);
+    // ceil: 切り上げ
+    $max_page = ceil($feed_cnt['cnt'] / $page_row_number);
+    // $record["feed_cnt"] = $feed_cnt["cnt"];
+    // if($record['feed_cnt'] % 5 == 0){
+    // 	$max_page = $record['feed_cnt']/5;
+    // }else{
+    // 	$page_result = $record['feed_cnt']/5;
+    // floor: 切り捨て
+    // 	$max_page = floor($page_result) + 1;
+    // }
+
+    // 第一引数と第二引数を比較し、第二引数の方が小さければ、第二引数の値を返す
+    $page = min($page, $max_page);
+
     // データを取得する開始番号を計算
     $start = ($page -1)*$page_row_number;
 
@@ -81,6 +104,7 @@
         }
         // 同じWhile文の中に$stmtや$dataがすでにあるため、そのまま実行すると上書きされてしまう。
         // like数を取得するSQL文を作成
+
         $like_sql = 'SELECT COUNT(*) AS `like_cnt` FROM `likes` WHERE `feed_id` = ?';
         $like_data = array($record['id']);
 
@@ -108,6 +132,14 @@
         }else{
         $record["like_flag"] = 0;
         }
+        $comment_sql = "SELECT COUNT(*) AS `cnt` FROM `comments` WHERE `feed_id` = ?";
+		// SQL実行
+		$comment_data = array($record['id']);
+		$comment_stmt = $dbh->prepare($comment_sql);
+		$comment_stmt->execute($comment_data);
+        $comment_cnt = $comment_stmt->fetch(PDO::FETCH_ASSOC); 
+        $record["comment_cnt"] = $comment_cnt["cnt"];
+
         // いいね済みのみのリンクが押されたときは、配列にすでにいいね！してるものだけを代入する
         if (isset($_GET["feed_select"]) && ($_GET["feed_select"] == "likes") && ($record["like_flag"] == 1)) {
         	$feeds[] = $record;
@@ -119,19 +151,6 @@
         	$feeds[] = $record;
         }
     }
-
-    	$count_sql = 'SELECT COUNT(feed) AS `cnt` FROM `feeds`';
-    	$count_data = array();
-    	$count_stmt = $dbh->prepare($count_sql);
-    	$count_stmt->execute($count_data);
-    	$feed_cnt = $count_stmt->fetch(PDO::FETCH_ASSOC);
-    	$record["feed_cnt"] = $feed_cnt["cnt"];
-    	if($record['feed_cnt'] % 5 == 0){
-    		$max_page = $record['feed_cnt']/5;
-    	}else{
-    		$page_result = $record['feed_cnt']/5;
-    		$max_page = floor($page_result) + 1;
-    	}
 
 
 ?>
@@ -241,13 +260,16 @@
                 <span class="like_count">いいね数 : <?php echo $feed['like_cnt']; ?></span>
                 <?php } ?>
 
-                <span class="comment_count">コメント数 : 9</span>
+                <a href="#collapseComment<?php echo $feed["id"]; ?>" data-toggle="collapse" aria-expanded="false"><span class="comment_count">コメント数 : <?php echo $feed['comment_cnt']; ?></span></a>
                   <?php if ($feed["user_id"] == $_SESSION["id"] ){ ?>
               
                   <a href="edit.php?feed_id=<?php echo $feed["id"]; ?>" class="btn btn-success btn-xs">編集</a>
                   <a onclick="return confirm('削除してよろしいですか？')" href="delete.php?feed_id=<?php echo $feed["id"] ?>" class="btn btn-danger btn-xs">削除</a>
                   <?php } ?>
               </div>
+
+              <!-- コメントが押されたら表示される領域 -->
+              	<?php include("comment_view.php"); ?>
             </div>
           </div>
         <?php } ?>
