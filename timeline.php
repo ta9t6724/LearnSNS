@@ -190,7 +190,7 @@
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" width="18" class="img-circle"><?php echo $signin_user['name']; ?><span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#">マイページ</a></li>
+              <li><a href="profile.php?user_id=<?php echo $signin_user['id']; ?>">マイページ</a></li>
               <li><a href="signout.php">サインアウト</a></li>
             </ul>
           </li>
@@ -232,10 +232,10 @@
           <div class="thumbnail">
             <div class="row">
               <div class="col-xs-1">
-                <img src="user_profile_img/<?php echo $feed['img_name']; ?>" width="40">
+                <a href="profile.php?user_id=<?php echo $feed['user_id']; ?>"><img src="user_profile_img/<?php echo $feed['img_name']; ?>" width="40"></a>
               </div>
               <div class="col-xs-11">
-                <?php echo $feed['name']; ?><br>
+                <a href="profile.php?user_id=<?php echo $feed['user_id']; ?>"><?php echo $feed["name"]; ?></a> <br>
                 <a href="#" style="color: #7F7F7F;"><?php echo $feed['created'] ?></a>
               </div>
             </div>

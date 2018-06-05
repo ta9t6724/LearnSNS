@@ -22,7 +22,7 @@
                 <div class="col-xs-12" style="margin-top:10px;">
                  <?php foreach ($comments as $comment) { ?>
                   <img src="user_profile_img/<?php echo $comment['img_name']; ?>" width="40" class="img-circle">
-                  <span style="border-radius: 100px!important; -webkit-appearance:none;background-color:#eff1f3;padding:10px;margin-top:10px;"><a href="#"><?php echo $comment["name"]; ?></a> <?php echo $comment["comment"]; ?></span>
+                  <span style="border-radius: 100px!important; -webkit-appearance:none;background-color:#eff1f3;padding:10px;margin-top:10px;"><a href="profile.php?user_id=<?php echo $comment['user_id']; ?>"><?php echo $comment["name"]; ?></a> <?php echo $comment["comment"]; ?></span>
                   <br>
 <!--                   <br>
                   <img src="https://placehold.jp/40x40" width="40" class="img-circle">

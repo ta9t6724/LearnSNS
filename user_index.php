@@ -93,10 +93,10 @@
           <div class="thumbnail">
             <div class="row">
               <div class="col-xs-1">
-                <img src="user_profile_img/<?php echo $user['img_name']; ?>" width="80">
+                <a href="profile.php?user_id=<?php echo $user['id']; ?>"><img src="user_profile_img/<?php echo $user['img_name']; ?>" width="80"></a>
               </div>
               <div class="col-xs-11">
-                名前 <?php echo $user['name']; ?><br>
+                <a href="profile.php?user_id=<?php echo $user['id']; ?>">名前 <?php echo $user['name']; ?></a><br>
                 <a href="#" style="color: #7F7F7F;"><?php echo $user['created']; ?>からメンバー</a>
               </div>
             </div>
