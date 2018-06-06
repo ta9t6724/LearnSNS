@@ -25,25 +25,27 @@
     if ($record == false) {
          break;
     }
+      // like済みか判断するSQLを作成
+      $follow_flag_sql = "SELECT COUNT(*) AS `follow_flag` FROM `followers` WHERE `follower_id` = ? AND `user_id` = ?";
+
+      $follow_flag_data = array($signin_user['id'], $_SESSION['user_id']);
+
+      // SQL実行
+      $follow_flag_stmt = $dbh->prepare($follow_flag_sql);
+      $follow_flag_stmt->execute($follow_flag_data);
+      // followしてる数を取得
+      $follow_flag = $follow_flag_stmt->fetch(PDO::FETCH_ASSOC); //  follow数のfetch
+
+      if ($follow_flag["follow_flag"] > 0) {
+      $record["follow_flag"] = 1;
+      }else{
+      $record["follow_flag"] = 0;
+      }
    $users[] = $record;
   }
 
-  $follows = array();
-  $follow_sql = 'SELECT `f`.*,`u`.* FROM `users` AS `u` LEFT OUTER JOIN `followers` AS `f` ON `f`.`user_id`=`u`.`id` WHERE `f`.`follower_id` = ? ORDER BY `f`.`id` DESC';
-
-  $follow_data = array($_SESSION['user_id']);
-  $follow_stmt = $dbh->prepare($follow_sql);
-  $follow_stmt->execute($follow_data);
-  while (true) {
-    $record = $follow_stmt->fetch(PDO::FETCH_ASSOC); //  ここより上でfetchしてない？
-    if ($record == false) {
-         break;
-    }
-   $follows[] = $record;
-  }
-
   $followers = array();
-  $follower_sql = 'SELECT `f`.*,`u`.* FROM `users` AS `u` LEFT OUTER JOIN `followers` AS `f` ON `f`.`follower_id`=`u`.`id` WHERE `f`.`user_id` = ? ORDER BY `f`.`id` DESC';
+  $follower_sql = 'SELECT `f`.*,`u`.* FROM `users` AS `u` LEFT OUTER JOIN `followers` AS `f` ON `f`.`user_id`=`u`.`id` WHERE `f`.`follower_id` = ? ORDER BY `f`.`id` DESC';
 
   $follower_data = array($_SESSION['user_id']);
   $follower_stmt = $dbh->prepare($follower_sql);
@@ -54,6 +56,20 @@
          break;
     }
    $followers[] = $record;
+  }
+
+  $follows = array();
+  $follow_sql = 'SELECT `f`.*,`u`.* FROM `users` AS `u` LEFT OUTER JOIN `followers` AS `f` ON `f`.`follower_id`=`u`.`id` WHERE `f`.`user_id` = ? ORDER BY `f`.`id` DESC';
+
+  $follow_data = array($_SESSION['user_id']);
+  $follow_stmt = $dbh->prepare($follow_sql);
+  $follow_stmt->execute($follow_data);
+  while (true) {
+    $record = $follow_stmt->fetch(PDO::FETCH_ASSOC); //  ここより上でfetchしてない？
+    if ($record == false) {
+         break;
+    }
+   $follows[] = $record;
   }
 
  ?>
@@ -88,6 +104,7 @@ echo "</pre>";
         <ul class="nav navbar-nav">
           <li><a href="timeline.php">タイムライン</a></li>
           <li class="active"><a href="user_index.php">ユーザー一覧</a></li>
+          <li><a href="register/signup.php">サインアップ</a></li>
         </ul>
         <form method="GET" action="" class="navbar-form navbar-left" role="search">
           <div class="form-group">
@@ -113,7 +130,13 @@ echo "</pre>";
       <div class="col-xs-3 text-center">
         <img src="user_profile_img/<?php echo $users[0]['img_name']; ?>" class="img-thumbnail" />
         <h2><?php echo $users[0]['name']; ?></h2>
-        <a href="follow.php?user_id=<?php echo $users[0]['id']; ?>" class="btn btn-default btn-block">フォローする</a>
+          <?php if ($_SESSION['user_id'] != $signin_user['id']){ ?>
+            <?php if($users[0]['follow_flag'] == 0){ ?>
+              <a href="follow.php?user_id=<?php echo $users[0]['id']; ?>" class="btn btn-default btn-block">フォローする</a>
+            <?php }else{ ?>
+              <a href="unfollow.php?user_id=<?php echo $users[0]['id']; ?>" class="btn btn-default btn-block">フォロー解除する</a>
+            <?php } ?>
+          <?php } ?>
       </div>
 
       <div class="col-xs-9">
@@ -135,7 +158,7 @@ echo "</pre>";
                   <a href="profile.php?user_id=<?php echo $follow['id']; ?>"><img src="user_profile_img/<?php echo $follow['img_name']; ?>" width="80"></a>
                 </div>
                 <div class="col-xs-10">
-                  <a href="profile.php?user_id=<?php echo $follow['id']; ?>">名前 <?php echo $follow['name']; ?></a><br>
+                  <a href="profile.php?user_id=<?php echo $follow['id']; ?>"><?php echo $follow['name']; ?></a><br>
                   <a href="#" style="color: #7F7F7F;"><?php echo $follow['created']; ?>からメンバー</a>
                 </div>
               </div>

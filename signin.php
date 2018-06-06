@@ -73,6 +73,7 @@
             <input type="password" name="input_password" class="form-control" id="password" placeholder="4 ~ 16文字のパスワード">
           </div>
           <input type="submit" class="btn btn-info" value="サインイン">
+          <a href="register/signup.php"><button type="button" class="btn btn-outline-info" style="float:right;">サインアップ</button></a>
         </form>
       </div>
     </div>

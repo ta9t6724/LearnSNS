@@ -65,6 +65,8 @@
         <ul class="nav navbar-nav">
           <li><a href="timeline.php">タイムライン</a></li>
           <li class="active"><a href="user_index.php">ユーザー一覧</a></li>
+          <li><a href="register/signup.php">サインアップ</a></li>
+
         </ul>
         <form method="GET" action="" class="navbar-form navbar-left" role="search">
           <div class="form-group">
@@ -96,7 +98,7 @@
                 <a href="profile.php?user_id=<?php echo $user['id']; ?>"><img src="user_profile_img/<?php echo $user['img_name']; ?>" width="80"></a>
               </div>
               <div class="col-xs-11">
-                <a href="profile.php?user_id=<?php echo $user['id']; ?>">名前 <?php echo $user['name']; ?></a><br>
+                <a href="profile.php?user_id=<?php echo $user['id']; ?>"><?php echo $user['name']; ?></a><br>
                 <a href="#" style="color: #7F7F7F;"><?php echo $user['created']; ?>からメンバー</a>
               </div>
             </div>

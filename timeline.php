@@ -179,6 +179,7 @@
         <ul class="nav navbar-nav">
           <li class="active"><a href="#">タイムライン</a></li>
           <li><a href="user_index.php">ユーザー一覧</a></li>
+          <li><a href="register/signup.php">サインアップ</a></li>
         </ul>
         <form method="GET" action="" class="navbar-form navbar-left" role="search">
           <div class="form-group">
