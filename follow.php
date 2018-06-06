@@ -6,18 +6,18 @@ session_start();
 require('dbconnect.php');
 
 // サインインしているユーザーの情報を取得
-$sql = 'SELECT * FROM `users` WHERE `id`=?';
-$data = array($_SESSION['id']);
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+// $sql = 'SELECT * FROM `users` WHERE `id`=?';
+// $data = array($_SESSION['id']);
+// $stmt = $dbh->prepare($sql);
+// $stmt->execute($data);
+// $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // user_idを取得
 $user_id = $_SESSION['user_id'];
 // SQL文作成（INSERT文）
 $sql = "INSERT INTO `followers` SET `user_id` = ?, `follower_id` = ?, `created` = NOW()";
 // SQL実行
-$data = array($user_id, $signin_user['id']);
+$data = array($user_id, $_SESSION['id']);
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 

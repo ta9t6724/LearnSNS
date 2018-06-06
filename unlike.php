@@ -1,4 +1,7 @@
 <?php 
+
+$page = $_GET["page"];
+
 // session変数を使えるようにする
 session_start();
 // DBに接続
@@ -12,7 +15,11 @@ $sql = "DELETE FROM `likes` WHERE `user_id` = ? AND `feed_id` = ?";
 $data = array($_SESSION["id"], $feed_id);
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
+
+// echo $page . "<br>";
+// echo $_GET["page"];
+
 // 一覧に戻る
-header("Location: timeline.php");
+header("Location: timeline.php?page=". $_GET["page"]);
 
  ?>
