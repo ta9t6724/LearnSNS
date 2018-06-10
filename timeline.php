@@ -3,12 +3,24 @@
 
   session_start();
   require('dbconnect.php');
-  $sql = 'SELECT * FROM `users` WHERE `id`=?';
-  $data = array($_SESSION['id']);
-  $stmt = $dbh->prepare($sql);
-  $stmt->execute($data);
+  require('function.php');
 
-  $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+  // ログイン済みかチェックし、未ログインであれば、ログイン画面に戻す
+  // if (!isset($_SESSION["id"])) {
+  // 	header("Location: signin.php")
+  // 	exit(); //このタイミングで処理を中断する
+  // }
+  check_signin($_SESSION['id']);
+
+
+  // $sql = 'SELECT * FROM `users` WHERE `id`=?';
+  // $data = array($_SESSION['id']);
+  // $stmt = $dbh->prepare($sql);
+  // $stmt->execute($data);
+
+  // $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+  $signin_user = get_signin_user($dbh, $_SESSION['id']);
+
 
       // 初期化
     $errors = array();

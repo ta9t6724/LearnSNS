@@ -1,14 +1,23 @@
 <?php 
   session_start();
-  require('dbconnect.php');
-  $sql = 'SELECT * FROM `users` WHERE `id`=?';
-  $data = array($_SESSION['id']);
-  $stmt = $dbh->prepare($sql);
-  $stmt->execute($data);
 
-  $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
-  // DB接続
   require('dbconnect.php');
+  require('function.php');
+
+  check_signin($_SESSION['id']);
+
+  $signin_user = get_signin_user($dbh, $_SESSION['id']);
+
+  // require('dbconnect.php');
+  // $sql = 'SELECT * FROM `users` WHERE `id`=?';
+  // $data = array($_SESSION['id']);
+  // $stmt = $dbh->prepare($sql);
+  // $stmt->execute($data);
+
+  // $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  // DB接続
+  // require('dbconnect.php');
 
   // ユーザーの一覧を表示するため取得する
   $sql = 'SELECT * FROM `users`';
